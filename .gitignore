@@ -1,0 +1,8 @@
+.vagrant/
+.DS_Store
+*.log
+*.scratch
+playgroud/
+.terraform
+*.tfstate*
+join-command
