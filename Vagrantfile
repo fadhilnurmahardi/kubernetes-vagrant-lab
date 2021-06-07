@@ -22,7 +22,7 @@ Vagrant.configure(2) do |config|
     config.vm.define "node-#{i}" do |node|
       node.vm.provider "virtualbox" do |v|
         v.memory = 1024
-        v.cpus = 2
+        v.cpus = 1
       end
       node.vm.box = IMAGE_NAME
       node.vm.network "private_network", ip: "173.16.1.#{i + 10}"

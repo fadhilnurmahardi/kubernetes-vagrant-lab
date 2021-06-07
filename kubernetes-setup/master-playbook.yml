@@ -109,10 +109,13 @@
         state: file
         group: vagrant
         owner: vagrant
+    
+    - name: Copy the calico to server location
+      copy: src=calico.yml dest=/tmp/calico.yml
 
     - name: Install calico pod network
       become: false
-      command: kubectl create -f https://docs.projectcalico.org/v3.9/manifests/calico.yaml
+      command: kubectl create -f /tmp/calico.yml
 
     - name: Generate join command
       command: kubeadm token create --print-join-command
