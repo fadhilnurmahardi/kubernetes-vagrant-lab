@@ -1,0 +1,61 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  annotations:
+  name: ecr-cred-helper
+  namespace: infra-system
+spec:
+  concurrencyPolicy: Allow
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    metadata:
+      creationTimestamp: null
+    spec:
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          serviceAccountName: cron-ecr
+          containers:
+          - command:
+            - /bin/sh
+            - -c
+            - |-
+              REGION=$AWS_DEFAULT_REGION
+              SECRET_NAME=${REGION}-ecr-registry
+              EMAIL=xxx
+              TOKEN=`aws ecr get-login --region ${REGION} --registry-ids ${ACCOUNT} | cut -d' ' -f6`
+              echo "ENV variables setup done."
+              kubectl -n services delete secret --ignore-not-found $SECRET_NAME
+              kubectl -n services create secret docker-registry $SECRET_NAME \
+              --docker-server=https://${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com \
+              --docker-username=AWS \
+              --docker-password="${TOKEN}" \
+              --docker-email="${EMAIL}"
+              echo "Secret created by name. $SECRET_NAME"
+            env:
+            - name: AWS_DEFAULT_REGION
+              value: "xxx"
+            - name: AWS_SECRET_ACCESS_KEY
+              value: "xxx"
+            - name: AWS_ACCESS_KEY_ID
+              value: "xxx"
+            - name: ACCOUNT
+              value: "xxx"
+            image: odaniait/aws-kubectl:latest
+            imagePullPolicy: IfNotPresent
+            name: ecr-cred-helper
+            resources: {}
+            securityContext:
+              capabilities: {}
+            terminationMessagePath: /dev/termination-log
+            terminationMessagePolicy: File
+          dnsPolicy: Default
+          hostNetwork: true
+          restartPolicy: Never
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+  schedule: 0 */6 * * *
+  successfulJobsHistoryLimit: 3
+  suspend: false
