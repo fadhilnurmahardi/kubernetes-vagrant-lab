@@ -2,6 +2,13 @@ global:
   enabled: true
   tlsDisable: false
 
+injector:
+  enabled: true
+  logLevel: "trace"
+
+ui:
+  enabled: true
+
 server:
   extraEnvironmentVars:
     VAULT_CACERT: /vault/userconfig/vault-server-tls/vault.ca
@@ -13,6 +20,7 @@ server:
   dataStorage:
     size: 5Gi
     storageClass: local-storage
+    accessMode: ReadWriteOnce
 
   standalone:
     enabled: true

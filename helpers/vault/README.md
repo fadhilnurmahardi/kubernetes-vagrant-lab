@@ -25,7 +25,8 @@ How to create agent injector with vault :
 2. `export VAULT_TOKEN=root_token` to set vault token
 3. First we need to create token policy
 
-```cat <<EOF > /home/vault/app-policy.hcl
+```
+cat <<EOF > /home/vault/app-policy.hcl
 path "config/*" {
   capabilities = ["read"]
 }
@@ -40,6 +41,7 @@ This policy will able to read secret in path `config/*`
 
 ```
 vault write auth/kubernetes/config \
+   issuer="https://kubernetes.default.svc.cluster.local" \
    token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
    kubernetes_host=https://${KUBERNETES_PORT_443_TCP_ADDR}:443 \
    kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
