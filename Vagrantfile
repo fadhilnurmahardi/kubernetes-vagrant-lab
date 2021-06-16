@@ -4,7 +4,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.define "k8s-master" do |master|
     master.vm.provider "virtualbox" do |v|
-      v.memory = 2048
+      v.memory = 3072
       v.cpus = 2
     end
     master.vm.box = IMAGE_NAME
@@ -21,8 +21,8 @@ Vagrant.configure(2) do |config|
   (1..N).each do |i|
     config.vm.define "node-#{i}" do |node|
       node.vm.provider "virtualbox" do |v|
-        v.memory = 1024
-        v.cpus = 1
+        v.memory = 2048
+        v.cpus = 2
       end
       node.vm.box = IMAGE_NAME
       node.vm.network "private_network", ip: "173.16.1.#{i + 10}"
