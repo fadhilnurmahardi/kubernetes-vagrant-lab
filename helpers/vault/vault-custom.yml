@@ -8,6 +8,8 @@ injector:
 
 ui:
   enabled: true
+  serviceType: "NodePort"
+  externalPort: 8200
 
 server:
   extraEnvironmentVars:
