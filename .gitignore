@@ -6,3 +6,4 @@ playgroud/
 .terraform
 *.tfstate*
 join-command
+cert/

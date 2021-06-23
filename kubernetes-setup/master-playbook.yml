@@ -91,7 +91,7 @@
         state: restarted
     
     - name: Initialize the Kubernetes cluster using kubeadm
-      command: kubeadm init --apiserver-advertise-address="173.16.1.10" --apiserver-cert-extra-sans="173.16.1.10"  --node-name k8s-master --pod-network-cidr=192.168.0.0/16
+      command: kubeadm init --apiserver-advertise-address="173.16.1.10" --apiserver-cert-extra-sans="173.16.1.10" --node-name k8s-master --pod-network-cidr=172.17.0.0/16
     
     - name: Create a directory kubeconfig if it does not exist
       file:
@@ -115,7 +115,7 @@
 
     - name: Install calico pod network
       become: false
-      command: kubectl create -f /tmp/calico.yml
+      command: kubectl apply -f /tmp/calico.yml
 
     - name: Generate join command
       command: kubeadm token create --print-join-command

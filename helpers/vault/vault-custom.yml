@@ -5,6 +5,9 @@ global:
 injector:
   enabled: true
   logLevel: "trace"
+  certs:
+    secretName: injector-tls
+    caBundle: xx
 
 ui:
   enabled: true

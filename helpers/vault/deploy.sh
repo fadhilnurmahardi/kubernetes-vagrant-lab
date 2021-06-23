@@ -6,7 +6,7 @@ NAMESPACE=infra-system
 
 SECRET_NAME=vault-server-tls
 
-TMPDIR=/tmp
+TMPDIR=cert
 
 CSR_NAME=vault-csr
 
@@ -48,6 +48,8 @@ spec:
   - server auth
 EOF
 
+kubectl -n infra-system delete -f ${TMPDIR}/csr.yaml --ignore-not-found
+
 kubectl create -f ${TMPDIR}/csr.yaml
 
 kubectl certificate approve ${CSR_NAME}
@@ -57,6 +59,8 @@ serverCert=$(kubectl get csr ${CSR_NAME} -o jsonpath='{.status.certificate}')
 echo "${serverCert}" | openssl base64 -d -A -out ${TMPDIR}/vault.crt
 
 kubectl config view --raw --minify --flatten -o jsonpath='{.clusters[].cluster.certificate-authority-data}' | base64 -d > ${TMPDIR}/vault.ca
+
+kubectl -n infra-system delete secret --ignore-not-found $SECRET_NAME
 
 kubectl create secret generic ${SECRET_NAME} \
         --namespace ${NAMESPACE} \
